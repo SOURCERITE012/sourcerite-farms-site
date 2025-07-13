@@ -5,14 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SOURCERITE FARMS</title>
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #000; /* Fallback color */
-      color: #ffd700;
-      position: relative; /* For overlay positioning */
-      min-height: 100vh; /* Ensure body covers viewport */
+      background-color: #ffffff;
+      color: #1e3a8a;
+      overflow-x: hidden;
     }
+
     body::before {
       content: '';
       position: fixed;
@@ -20,53 +24,86 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('background.jpg'); /* Replace with your background image path */
+      background-image: url('background.jpg'); /* Optional */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      opacity: 0.3; /* Adjust opacity for readability */
-      z-index: -1; /* Place behind content */
+      opacity: 0.1;
+      z-index: -1;
     }
+
+    /* Splash Screen */
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background-color: #1e3a8a;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 9999;
+      transition: opacity 1s ease;
+    }
+
+    #splash-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #enter-btn {
+      background-color: #fff;
+      color: #1e3a8a;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    #enter-btn:hover {
+      background-color: #e0e0ff;
+      transform: scale(1.05);
+    }
+
+    #main-content {
+      display: none;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    #main-content.visible {
+      display: block;
+      opacity: 1;
+    }
+
     header {
-      background-color: #ffd700;
-      color: #000;
+      background-color: #1e3a8a;
+      color: #fff;
       padding: 20px;
       text-align: center;
-      position: relative; /* Ensure header is above background */
     }
+
     header img {
       height: 80px;
     }
-    h1 {
-      margin: 10px 0 0;
-      font-size: 2em;
-    }
-    .welcome {
+
+    .welcome,
+    .specializations,
+    .gallery,
+    .socials {
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #1e3a8a;
       padding: 40px 20px;
-      background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent for readability */
       text-align: center;
-      position: relative;
     }
-    .welcome h2 {
-      color: #ffd700;
-      font-size: 2.5em;
-      margin: 0 0 10px;
-    }
-    .welcome p {
-      font-size: 1.2em;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .specializations {
-      padding: 30px 20px;
-      background-color: rgba(17, 17, 17, 0.8); /* Semi-transparent for readability */
-      color: #ffd700;
-      position: relative; /* Ensure content is above background */
-    }
-    .specializations h2 {
-      color: #ffd700;
-      font-size: 1.5em;
-    }
+
     .specializations ul {
       list-style: none;
       padding: 0;
@@ -75,6 +112,7 @@
       gap: 20px;
       justify-content: center;
     }
+
     .specializations li {
       padding: 10px;
       font-size: 1.1em;
@@ -83,99 +121,149 @@
       gap: 10px;
       max-width: 400px;
     }
-    .specializations li::before {
-      content: '➡️';
-      margin-right: 10px;
-      color: #ffd700;
-    }
-    .specializations img {
+
+    .specializations img,
+    .gallery img {
       width: 100px;
       height: 100px;
       object-fit: cover;
       border-radius: 5px;
-      border: 2px solid #ffd700;
-      box-shadow: 0 2px 6px rgba(255, 215, 0, 0.5);
+      border: 2px solid #1e3a8a;
+      box-shadow: 0 2px 6px rgba(30, 58, 138, 0.4);
     }
+
     .gallery {
       display: flex;
       flex-wrap: wrap;
       gap: 15px;
-      padding: 20px;
       justify-content: center;
-      background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent for readability */
-      position: relative;
     }
+
     .gallery img {
       width: 300px;
       height: 200px;
-      object-fit: cover;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(255, 215, 0, 0.5);
-      border: 2px solid #ffd700;
     }
-    .socials {
-      text-align: center;
-      padding: 30px 10px;
-      background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent for readability */
-      position: relative;
-    }
+
     .socials a {
       display: inline-block;
       margin: 0 10px;
       padding: 10px 20px;
-      background-color: #ffd700;
-      color: #000;
+      background-color: #1e3a8a;
+      color: #fff;
       text-decoration: none;
       border-radius: 25px;
       font-weight: bold;
-      transition: background 0.3s;
     }
-    .socials a:hover {
-      background-color: #ff9900;
-    }
+
     footer {
-      background-color: #ffd700;
-      color: #000;
+      background-color: #1e3a8a;
+      color: #fff;
       text-align: center;
       padding: 15px;
-      position: relative;
+    }
+
+    /* Scroll to Top */
+    #scrollTopBtn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #1e3a8a;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 50%;
+      font-size: 1.5em;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+    }
+
+    #scrollTopBtn:hover {
+      background-color: #2563eb;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="SOURCERITE FARMS Logo" /> <!-- Replace with your logo filename if different -->
-    <h1>SOURCERITE FARMS</h1>
-  </header>
-  <section class="welcome">
-    <h2>Welcome to SOURCERITE FARMS</h2>
-    <p>Discover sustainable agriculture with our expertise in fish production, farm setup, and agribusiness solutions. Join us in cultivating a greener future!</p>
-  </section>
-  <section class="specializations">
-    <h2>We specialize in:</h2>
-    <ul>
-      <li><img src="tilapia.jpg" alt="Tilapia Production">Tilapia and catfish production</li>
-      <li><img src="smoked-catfish-logo.png" alt="Smoked Catfish Processing">Bulk smoking/processing of fish</li> <!-- Replace with your smoked catfish logo filename if different -->
-      <li><img src="farm-setup.jpg" alt="Farm Setup">Farm set-up</li>
-      <li><img src="seedlings.jpg" alt="Seeds and Seedlings">Sales of seeds and seedlings of crops</li>
-      <li><img src="produce.jpg" alt="Agricultural Produce">Supply of agricultural produce</li>
-      <li><img src="agribusiness.jpg" alt="Agribusiness Solutions">And general agribusiness solutions</li>
-    </ul>
-  </section>
-  <section class="gallery">
-    <img src="tilapia.jpg" alt="Tilapia Production" />
-    <img src="smoked-catfish-logo.png" alt="Smoked Catfish Processing" /> <!-- Replace with your smoked catfish logo filename if different -->
-    <img src="farm-setup.jpg" alt="Farm Setup" />
-    <img src="seedlings.jpg" alt="Seeds and Seedlings" />
-    <img src="produce.jpg" alt="Agricultural Produce" />
-    <img src="agribusiness.jpg" alt="Agribusiness Solutions" />
-  </section>
-  <div class="socials">
-    <a href="#" target="_blank">Facebook</a>
-    <a href="#" target="_blank">Instagram</a>
+
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <h1>Welcome to SOURCERITE FARMS</h1>
+    <button id="enter-btn">Enter Site</button>
+    <audio id="bg-music" src="welcome.mp3" preload="auto"></audio>
   </div>
-  <footer>
-    © 2025 SOURCERITE FARMS. All rights reserved.
-  </footer>
+
+  <!-- Main Content -->
+  <div id="main-content">
+    <header>
+      <img src="logo.png" alt="SOURCERITE FARMS Logo" />
+      <h1>SOURCERITE FARMS</h1>
+    </header>
+
+    <section class="welcome">
+      <h2>Welcome to SOURCERITE FARMS</h2>
+      <p>Discover sustainable agriculture with our expertise in fish production, farm setup, and agribusiness solutions. Join us in cultivating a greener future!</p>
+    </section>
+
+    <section class="specializations">
+      <h2>We specialize in:</h2>
+      <ul>
+        <li><img src="tilapia.jpg" alt="Tilapia">Tilapia and catfish production</li>
+        <li><img src="smoked-catfish-logo.png" alt="Smoked Fish">Bulk smoking/processing of fish</li>
+        <li><img src="farm-setup.jpg" alt="Farm Setup">Farm set-up</li>
+        <li><img src="seedlings.jpg" alt="Seedlings">Sales of seeds and seedlings of crops</li>
+        <li><img src="produce.jpg" alt="Produce">Supply of agricultural produce</li>
+        <li><img src="agribusiness.jpg" alt="Agribusiness">General agribusiness solutions</li>
+      </ul>
+    </section>
+
+    <section class="gallery">
+      <img src="tilapia.jpg" alt="Tilapia" />
+      <img src="smoked-catfish-logo.png" alt="Smoked Fish" />
+      <img src="farm-setup.jpg" alt="Farm Setup" />
+      <img src="seedlings.jpg" alt="Seedlings" />
+      <img src="produce.jpg" alt="Produce" />
+      <img src="agribusiness.jpg" alt="Agribusiness" />
+    </section>
+
+    <div class="socials">
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
+    </div>
+
+    <footer>
+      © 2025 SOURCERITE FARMS. All rights reserved.
+    </footer>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollTopBtn" title="Back to top">↑</button>
+
+  <!-- JavaScript -->
+  <script>
+    const splash = document.getElementById("splash-screen");
+    const main = document.getElementById("main-content");
+    const enterBtn = document.getElementById("enter-btn");
+    const audio = document.getElementById("bg-music");
+
+    enterBtn.addEventListener("click", () => {
+      splash.classList.add("fade-out");
+      setTimeout(() => {
+        splash.style.display = "none";
+        main.classList.add("visible");
+        if (audio) {
+          audio.play().catch(() => {});
+        }
+      }, 1000);
+    });
+
+    // Scroll to top button
+    const scrollTopBtn = document.getElementById("scrollTopBtn");
+    window.onscroll = () => {
+      scrollTopBtn.style.display = window.scrollY > 300 ? "block" : "none";
+    };
+    scrollTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  </script>
+
 </body>
 </html>
